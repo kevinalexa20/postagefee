@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:postagecheck/core/features/home/presentation/home_page.dart';
+import 'package:postagecheck/home/presentation/view/home_page.dart';
 
 final appRouter = GoRouter(
   routes: [

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:postagecheck/routes/routes.dart';
+import 'package:postagecheck/core/resources/routes.dart';
 
 void main() {
   runApp(MyApp());
