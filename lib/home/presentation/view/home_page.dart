@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import "package:dio/dio.dart";
+
+import '../../data/models/province_model.dart';
 
 class HomePage extends StatelessWidget {
+  final dio = Dio();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,25 +17,30 @@ class HomePage extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            DropdownSearch<String>(
+            DropdownSearch<Province>(
+              items: const [],
               popupProps: PopupProps.menu(
-                showSelectedItems: true,
-                disabledItemFn: (String s) => s.startsWith('I'),
+                itemBuilder: (context, item, isSelected) =>
+                    ListTile(title: Text("${item.province}")),
               ),
-              clearButtonProps: const ClearButtonProps(
-                isVisible: true,
-              ),
-
-              items: const ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
+              itemAsString: (item) => item.province!,
               dropdownDecoratorProps: const DropDownDecoratorProps(
-                dropdownSearchDecoration: InputDecoration(
-                  labelText: "Menu mode",
-                  hintText: "Select Province ...",
-                ),
+                dropdownSearchDecoration:
+                    InputDecoration(hintText: 'Select Province ...'),
               ),
-              onChanged: print,
-              // selectedItem: "Brazil",
-            )
+              asyncItems: (String filter) async {
+                final response = await dio.get(
+                  "https://api.rajaongkir.com/starter/province",
+                  queryParameters: {
+                    "filter": filter,
+                    "key": "e44ab0df69347b30971185dacfa399f4",
+                  },
+                );
+
+                return Province.fromJsonList(
+                    response.data["rajaongkir"]["results"]);
+              },
+            ),
           ],
         ));
   }
