@@ -1,13 +1,33 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import "package:dio/dio.dart";
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../data/models/city_model.dart';
 import '../../data/models/province_model.dart';
+import '../controller/province/bloc/province_bloc.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final ProvinceBloc _provinceBloc = ProvinceBloc();
   final dio = Dio();
+
+  @override
+  void dispose() {
+    _provinceBloc.close();
+    super.dispose();
+  }
+
+  // StreamController<List<Province>> _provinceStreamController =
+  //     StreamController<List<Province>>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,28 +37,183 @@ class HomePage extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-            DropdownSearch<Province>(
-              items: const [],
-              popupProps: PopupProps.menu(
-                itemBuilder: (context, item, isSelected) =>
-                    ListTile(title: Text("${item.province}")),
-              ),
-              itemAsString: (item) => item.province!,
-              dropdownDecoratorProps: const DropDownDecoratorProps(
-                dropdownSearchDecoration:
-                    InputDecoration(hintText: 'Select Province ...'),
-              ),
-              asyncItems: (String filter) async {
-                final response = await dio.get(
-                  "https://api.rajaongkir.com/starter/province",
-                  queryParameters: {
-                    "filter": filter,
-                    "key": "e44ab0df69347b30971185dacfa399f4",
+            const Text('From',
+                style: TextStyle(
+                  fontSize: 24,
+                )),
+            const SizedBox(height: 15),
+            BlocBuilder<ProvinceBloc, ProvinceState>(
+              bloc: _provinceBloc,
+              builder: (context, state) {
+                return DropdownSearch<Province>(
+                  items: state.provinces,
+                  // items: const [],
+                  popupProps: PopupProps.menu(
+                    itemBuilder: (context, item, isSelected) =>
+                        ListTile(title: Text("${item.province}")),
+                    showSearchBox: true,
+                  ),
+                  itemAsString: (item) => item.province!,
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      hintText: 'Select Province ...',
+                      // suffixIcon: Icon(Icons.search),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 15,
+                      ),
+                    ),
+                  ),
+                  asyncItems: (String filter) async {
+                    _provinceBloc.add(UpdateProvinceIdEvent(filter));
+                    final state = await _provinceBloc.provinceStream.first;
+                    return state.provinces;
                   },
                 );
+              },
+            ),
+            SizedBox(height: 20),
+            BlocBuilder<ProvinceBloc, ProvinceState>(
+              bloc: _provinceBloc,
+              builder: (context, state) {
+                return DropdownSearch<City>(
+                  items: const [],
+                  popupProps: PopupProps.menu(
+                    itemBuilder: (context, item, isSelected) =>
+                        ListTile(title: Text("${item.type} ${item.cityName}")),
+                    showSearchBox: true,
+                  ),
+                  itemAsString: (item) => item.cityName!,
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      hintText: 'Select City ...',
+                      // suffixIcon: Icon(Icons.search),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 15,
+                      ),
+                    ),
+                  ),
+                  asyncItems: (String filter) async {
+                    final response = await dio.get(
+                      "https://api.rajaongkir.com/starter/city?province=${state.provinceId}",
+                      queryParameters: {
+                        "key": "e44ab0df69347b30971185dacfa399f4",
+                      },
+                    );
 
-                return Province.fromJsonList(
-                    response.data["rajaongkir"]["results"]);
+                    return City.fromJsonList(
+                        response.data["rajaongkir"]["results"]);
+                  },
+                );
+              },
+            ),
+            SizedBox(height: 55),
+            const Text('To',
+                style: TextStyle(
+                  fontSize: 24,
+                )),
+            const SizedBox(height: 15),
+            BlocBuilder<ProvinceBloc, ProvinceState>(
+              bloc: _provinceBloc,
+              builder: (context, state) {
+                return DropdownSearch<Province>(
+                  items: state.provinces,
+                  // items: const [],
+                  popupProps: PopupProps.menu(
+                    itemBuilder: (context, item, isSelected) =>
+                        ListTile(title: Text("${item.province}")),
+                    showSearchBox: true,
+                  ),
+                  itemAsString: (item) => item.province!,
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      hintText: 'Select Province ...',
+                      // suffixIcon: Icon(Icons.search),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 15,
+                      ),
+                    ),
+                  ),
+                  asyncItems: (String filter) async {
+                    _provinceBloc.add(UpdateProvinceIdEvent(filter));
+                    final state = await _provinceBloc.provinceStream.first;
+                    return state.provinces;
+                  },
+                );
+              },
+            ),
+            SizedBox(height: 20),
+            BlocBuilder<ProvinceBloc, ProvinceState>(
+              bloc: _provinceBloc,
+              builder: (context, state) {
+                return DropdownSearch<City>(
+                  items: const [],
+                  popupProps: PopupProps.menu(
+                    itemBuilder: (context, item, isSelected) =>
+                        ListTile(title: Text("${item.type} ${item.cityName}")),
+                    showSearchBox: true,
+                  ),
+                  itemAsString: (item) => item.cityName!,
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      hintText: 'Select City ...',
+                      // suffixIcon: Icon(Icons.search),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 15,
+                      ),
+                    ),
+                  ),
+                  asyncItems: (String filter) async {
+                    final response = await dio.get(
+                      "https://api.rajaongkir.com/starter/city?province=${state.provinceId}",
+                      queryParameters: {
+                        "key": "e44ab0df69347b30971185dacfa399f4",
+                      },
+                    );
+
+                    return City.fromJsonList(
+                        response.data["rajaongkir"]["results"]);
+                  },
+                );
+              },
+            ),
+            SizedBox(height: 55),
+            const Text('Select Courier',
+                style: TextStyle(
+                  fontSize: 24,
+                )),
+            const SizedBox(height: 15),
+            BlocBuilder<ProvinceBloc, ProvinceState>(
+              bloc: _provinceBloc,
+              builder: (context, state) {
+                return DropdownSearch<Province>(
+                  items: state.provinces,
+                  // items: const [],
+                  popupProps: PopupProps.menu(
+                    itemBuilder: (context, item, isSelected) =>
+                        ListTile(title: Text("${item.province}")),
+                    showSearchBox: true,
+                  ),
+                  itemAsString: (item) => item.province!,
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      hintText: 'Select Province ...',
+                      // suffixIcon: Icon(Icons.search),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 15,
+                      ),
+                    ),
+                  ),
+                  asyncItems: (String filter) async {
+                    _provinceBloc.add(UpdateProvinceIdEvent(filter));
+                    final state = await _provinceBloc.provinceStream.first;
+                    return state.provinces;
+                  },
+                );
               },
             ),
           ],
