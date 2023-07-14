@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
-
-import '../../../../data/models/province_model.dart';
+import 'package:postagecheck/home/data/model/province_model.dart';
 
 part 'province_event.dart';
 part 'province_state.dart';

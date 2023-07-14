@@ -5,9 +5,9 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import "package:dio/dio.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:postagecheck/home/data/model/city_model.dart';
+import 'package:postagecheck/home/data/model/province_model.dart';
 
-import '../../data/models/city_model.dart';
-import '../../data/models/province_model.dart';
 import '../controller/province/bloc/province_bloc.dart';
 
 class HomePage extends StatefulWidget {

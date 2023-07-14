@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
+import 'package:postagecheck/home/data/model/city_model.dart';
+import 'package:postagecheck/home/data/model/province_model.dart';
 
-import '../../data/models/city_model.dart';
-import '../../data/models/province_model.dart';
 
 part 'home_page_event.dart';
 part 'home_page_state.dart';
