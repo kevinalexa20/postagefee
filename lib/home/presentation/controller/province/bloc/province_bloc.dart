@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
+import 'package:postagecheck/home/data/model/city_model.dart';
 import 'package:postagecheck/home/data/model/province_model.dart';
 
 part 'province_event.dart';
@@ -12,17 +13,11 @@ class ProvinceBloc extends Bloc<ProvinceEvent, ProvinceState> {
   final Dio dio = Dio();
   final _provinceStreamController = StreamController<ProvinceState>();
 
-  ProvinceBloc() : super(ProvinceState(provinceId: '', provinces: [])) {
+  ProvinceBloc()
+      : super(ProvinceState(provinceId: '', provinces: [], cities: [])) {
     on<UpdateProvinceIdEvent>((event, emit) async {
       emit(await _fetchProvinces(event.provinceId));
     });
-
-    // on<UpdateProvinceIdEvent>((event, emit) {
-    //   emit(state.copyWith(provinceId: event.provinceId));
-    //   _fetchProvinces(event.provinceId).then((provinces) {
-    //     _provinceStreamController.add(provinces);
-    //   });
-    // });
   }
 
   Stream<ProvinceState> get provinceStream => _provinceStreamController.stream
@@ -46,6 +41,32 @@ class ProvinceBloc extends Bloc<ProvinceEvent, ProvinceState> {
     } catch (e) {
       // Handle error
       throw Exception("Failed to fetch provinces: $e");
+    }
+  }
+
+  @override
+  Stream<ProvinceState> mapEventToState(ProvinceEvent event) async* {
+    if (event is UpdateProvinceIdEvent) {
+      yield* _mapUpdateProvinceIdEventToState(event);
+    }
+  }
+
+  Stream<ProvinceState> _mapUpdateProvinceIdEventToState(
+      UpdateProvinceIdEvent event) async* {
+    try {
+      // Panggil API untuk mendapatkan daftar kota berdasarkan provinceId
+      final response = await dio.get(
+        "https://api.rajaongkir.com/starter/city?province=${event.provinceId}",
+        queryParameters: {
+          "key": "e44ab0df69347b30971185dacfa399f4",
+        },
+      );
+
+      final cities = City.fromJsonList(response.data["rajaongkir"]["results"]);
+
+      yield state.copyWith(provinceId: event.provinceId, cities: cities);
+    } catch (e) {
+      // Handle error
     }
   }
 
