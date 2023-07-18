@@ -1,18 +1,27 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
 import 'package:postagecheck/home/data/model/city_model.dart';
 import 'package:postagecheck/home/data/model/province_model.dart';
-
 
 part 'home_page_event.dart';
 part 'home_page_state.dart';
 
 class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
-  HomePageBloc() : super(HomePageInitial()) {
-    on<HomePageEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+  HomePageBloc()
+      : super(HomePageState(
+            provFromId: '', cityFromId: '', provToId: '', cityToId: ''));
+
+  @override
+  Stream<HomePageState> mapEventToState(HomePageEvent event) async* {
+    if (event is UpdateProvFromIdEvent) {
+      yield state.copyWith(provFromId: event.provFromId);
+    } else if (event is UpdateCityFromIdEvent) {
+      yield state.copyWith(cityFromId: event.cityFromId);
+    } else if (event is UpdateProvToIdEvent) {
+      yield state.copyWith(provToId: event.provToId);
+    } else if (event is UpdateCityToIdEvent) {
+      yield state.copyWith(cityToId: event.cityToId);
+    }
   }
 }
 

@@ -7,6 +7,7 @@ import "package:dio/dio.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:postagecheck/home/data/model/city_model.dart';
 import 'package:postagecheck/home/data/model/province_model.dart';
+import 'package:postagecheck/home/presentation/controller/home_page_bloc.dart';
 
 import '../controller/province/bloc/province_bloc.dart';
 
@@ -78,12 +79,11 @@ class _HomePageState extends State<HomePage> {
 
                     return provinces;
                   },
-
-                  // asyncItems: (String filter) async {
-                  //   _provinceBloc.add(UpdateProvinceIdEvent(filter));
-                  //   final state = await _provinceBloc.provinceStream.first;
-                  //   return state.provinces;
-                  // },
+                  onChanged: (selectedProvince) {
+                    final appBloc = context.read<HomePageBloc>();
+                    appBloc.add(
+                        UpdateProvFromIdEvent(selectedProvince!.provinceId!));
+                  },
                 );
               },
             ),
@@ -92,63 +92,39 @@ class _HomePageState extends State<HomePage> {
               bloc: _provinceBloc,
               builder: (context, state) {
                 return DropdownSearch<City>(
-                    items: const [],
-                    popupProps: PopupProps.menu(
-                      itemBuilder: (context, item, isSelected) => ListTile(
-                          title: Text("${item.type} ${item.cityName}")),
-                      showSearchBox: true,
-                    ),
-                    itemAsString: (item) => item.cityName!,
-                    dropdownDecoratorProps: const DropDownDecoratorProps(
-                      dropdownSearchDecoration: InputDecoration(
-                        hintText: 'Select City ...',
-                        // suffixIcon: Icon(Icons.search),
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 15,
-                        ),
+                  items: const [],
+                  popupProps: PopupProps.menu(
+                    itemBuilder: (context, item, isSelected) =>
+                        ListTile(title: Text("${item.type} ${item.cityName}")),
+                    showSearchBox: true,
+                  ),
+                  itemAsString: (item) => item.cityName!,
+                  dropdownDecoratorProps: const DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(
+                      hintText: 'Select City ...',
+                      // suffixIcon: Icon(Icons.search),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 15,
                       ),
                     ),
-                    asyncItems: (String filter) async {
-                      final response = await dio.get(
-                        "https://api.rajaongkir.com/starter/city?province=${state.provinceId}",
-                        queryParameters: {
-                          "key": "e44ab0df69347b30971185dacfa399f4",
-                        },
-                      );
-
-                      return City.fromJsonList(
-                          response.data["rajaongkir"]["results"]);
-                    }
-
-                    // asyncItems: (String filter) async {
-                    //   if (state.provinceId.isNotEmpty) {
-                    //     final response = await dio.get(
-                    //       "https://api.rajaongkir.com/starter/city?province=${state.provinceId}",
-                    //       queryParameters: {
-                    //         "key": "e44ab0df69347b30971185dacfa399f4",
-                    //       },
-                    //     );
-
-                    //     return City.fromJsonList(
-                    //         response.data["rajaongkir"]["results"]);
-                    //   }
-
-                    //   return [];
-                    // },
-
-                    // asyncItems: (String filter) async {
-                    //   final response = await dio.get(
-                    //     "https://api.rajaongkir.com/starter/city?province=${state.provinceId}",
-                    //     queryParameters: {
-                    //       "key": "e44ab0df69347b30971185dacfa399f4",
-                    //     },
-                    //   );
-
-                    //   return City.fromJsonList(
-                    //       response.data["rajaongkir"]["results"]);
-                    // },
+                  ),
+                  asyncItems: (String filter) async {
+                    final response = await dio.get(
+                      "https://api.rajaongkir.com/starter/city?province=${state.provinceId}",
+                      queryParameters: {
+                        "key": "e44ab0df69347b30971185dacfa399f4",
+                      },
                     );
+
+                    return City.fromJsonList(
+                        response.data["rajaongkir"]["results"]);
+                  },
+                  onChanged: (selectedCity) {
+                    final appBloc = context.read<HomePageBloc>();
+                    appBloc.add(UpdateCityFromIdEvent(selectedCity!.cityId!));
+                  },
+                );
               },
             ),
             SizedBox(height: 55),
