@@ -1,12 +1,11 @@
 part of 'province_bloc.dart';
 
-@immutable
 class ProvinceState {
   final String provinceId;
-  final List<Province> provinces;
+  final List<ProvinceModel> provinces;
   final List<City> cities;
 
-  ProvinceState(
+  const ProvinceState(
       {required this.provinceId,
       required this.provinces,
       required this.cities});
@@ -15,7 +14,7 @@ class ProvinceState {
 
   ProvinceState copyWith({
     String? provinceId,
-    List<Province>? provinces,
+    List<ProvinceModel>? provinces,
     List<City>? cities,
   }) {
     return ProvinceState(

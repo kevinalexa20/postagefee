@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class City {
   String? cityId;
   String? provinceId;

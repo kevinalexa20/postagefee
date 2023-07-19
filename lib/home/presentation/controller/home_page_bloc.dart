@@ -11,7 +11,6 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       : super(HomePageState(
             provFromId: '', cityFromId: '', provToId: '', cityToId: ''));
 
-  @override
   Stream<HomePageState> mapEventToState(HomePageEvent event) async* {
     if (event is UpdateProvFromIdEvent) {
       yield state.copyWith(provFromId: event.provFromId);
@@ -29,7 +28,7 @@ class HomeBloc extends Cubit<HomeState> {
   HomeBloc() : super(HomeState());
   final dio = Dio();
 
-  void selectProvince(Province province) {
+  void selectProvince(ProvinceModel province) {
     emit(state.copyWith(selectedProvince: province));
     loadCities(province.provinceId!);
   }
@@ -52,9 +51,9 @@ class HomeBloc extends Cubit<HomeState> {
 }
 
 class HomeState {
-  final List<Province> provinces;
+  final List<ProvinceModel> provinces;
   final List<City> cities;
-  final Province? selectedProvince;
+  final ProvinceModel? selectedProvince;
 
   HomeState({
     this.provinces = const [],
@@ -63,9 +62,9 @@ class HomeState {
   });
 
   HomeState copyWith({
-    List<Province>? provinces,
+    List<ProvinceModel>? provinces,
     List<City>? cities,
-    Province? selectedProvince,
+    ProvinceModel? selectedProvince,
   }) {
     return HomeState(
       provinces: provinces ?? this.provinces,
