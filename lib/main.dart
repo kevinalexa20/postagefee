@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:postagecheck/src/controller/cubit/city_cubit.dart';
 import 'package:postagecheck/src/services/ongkir_service.dart';
 
 import 'core/utils/routes.dart';
@@ -26,9 +27,12 @@ class MyApp extends StatelessWidget {
         BlocProvider<ProvinceBloc>(
           create: (_) => ProvinceBloc(),
         ),
-        // TODO:
+        // TODO: Menambahkan 2 CUBIT
         BlocProvider(
           create: (context) => ProvinceCubit(OngkirService()),
+        ),
+        BlocProvider(
+          create: (context) => CityCubit(OngkirService()),
         ),
         BlocProvider<HomePageBloc>(
           create: (_) => HomePageBloc(),
