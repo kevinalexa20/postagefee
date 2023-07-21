@@ -1,12 +1,10 @@
-import 'dart:convert';
-
-class Province {
+class ProvinceModel {
   String? provinceId;
   String? province;
 
-  Province({this.provinceId, this.province});
+  ProvinceModel({this.provinceId, this.province});
 
-  Province.fromJson(Map<String, dynamic> json) {
+  ProvinceModel.fromJson(Map<String, dynamic> json) {
     provinceId = json['province_id'];
     province = json['province'];
   }
@@ -18,8 +16,8 @@ class Province {
     return data;
   }
 
-  static List<Province> fromJsonList(List list) {
-    if (list.length == 0) return List<Province>.empty();
-    return list.map((item) => Province.fromJson(item)).toList();
+  static List<ProvinceModel> fromJsonList(List list) {
+    if (list.isEmpty) return List<ProvinceModel>.empty();
+    return list.map((item) => ProvinceModel.fromJson(item)).toList();
   }
 }

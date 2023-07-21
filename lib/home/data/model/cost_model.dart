@@ -29,7 +29,7 @@ class Courier {
       };
 
   static List<Courier> fromJsonList(List list) {
-    if (list.length == 0) return List<Courier>.empty();
+    if (list.isEmpty) return List<Courier>.empty();
     return list.map((item) => Courier.fromJson(item)).toList();
   }
 }

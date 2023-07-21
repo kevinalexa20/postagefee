@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:meta/meta.dart';
 import 'package:postagecheck/home/data/model/city_model.dart';
 import 'package:postagecheck/home/data/model/province_model.dart';
 
@@ -14,7 +13,7 @@ class ProvinceBloc extends Bloc<ProvinceEvent, ProvinceState> {
   final _provinceStreamController = StreamController<ProvinceState>();
 
   ProvinceBloc()
-      : super(ProvinceState(provinceId: '', provinces: [], cities: [])) {
+      : super(const ProvinceState(provinceId: '', provinces: [], cities: [])) {
     on<UpdateProvinceIdEvent>((event, emit) async {
       emit(await _fetchProvinces(event.provinceId));
     });
@@ -35,7 +34,7 @@ class ProvinceBloc extends Bloc<ProvinceEvent, ProvinceState> {
       );
 
       final provinces =
-          Province.fromJsonList(response.data["rajaongkir"]["results"]);
+          ProvinceModel.fromJsonList(response.data["rajaongkir"]["results"]);
 
       return state.copyWith(provinceId: provinceId, provinces: provinces);
     } catch (e) {
@@ -44,7 +43,6 @@ class ProvinceBloc extends Bloc<ProvinceEvent, ProvinceState> {
     }
   }
 
-  @override
   Stream<ProvinceState> mapEventToState(ProvinceEvent event) async* {
     if (event is UpdateProvinceIdEvent) {
       yield* _mapUpdateProvinceIdEventToState(event);

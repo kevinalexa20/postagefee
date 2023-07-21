@@ -1,9 +1,6 @@
-import 'dart:async';
-import 'dart:convert';
-
+import "package:dio/dio.dart";
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import "package:dio/dio.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:postagecheck/home/data/model/city_model.dart';
 import 'package:postagecheck/home/data/model/province_model.dart';
@@ -12,6 +9,8 @@ import 'package:postagecheck/home/presentation/controller/home_page_bloc.dart';
 import '../controller/province/bloc/province_bloc.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -46,7 +45,7 @@ class _HomePageState extends State<HomePage> {
             BlocBuilder<ProvinceBloc, ProvinceState>(
               bloc: _provinceBloc,
               builder: (context, state) {
-                return DropdownSearch<Province>(
+                return DropdownSearch<ProvinceModel>(
                   items: state.provinces,
                   // items: const [],
                   popupProps: PopupProps.menu(
@@ -74,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     );
 
-                    final provinces = Province.fromJsonList(
+                    final provinces = ProvinceModel.fromJsonList(
                         response.data["rajaongkir"]["results"]);
 
                     return provinces;
@@ -87,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             BlocBuilder<ProvinceBloc, ProvinceState>(
               bloc: _provinceBloc,
               builder: (context, state) {
@@ -127,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            SizedBox(height: 55),
+            const SizedBox(height: 55),
             const Text('To',
                 style: TextStyle(
                   fontSize: 24,
@@ -136,7 +135,7 @@ class _HomePageState extends State<HomePage> {
             BlocBuilder<ProvinceBloc, ProvinceState>(
               bloc: _provinceBloc,
               builder: (context, state) {
-                return DropdownSearch<Province>(
+                return DropdownSearch<ProvinceModel>(
                   items: state.provinces,
                   // items: const [],
                   popupProps: PopupProps.menu(
@@ -163,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             BlocBuilder<ProvinceBloc, ProvinceState>(
               bloc: _provinceBloc,
               builder: (context, state) {
@@ -199,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            SizedBox(height: 55),
+            const SizedBox(height: 55),
             const Text('Select Courier',
                 style: TextStyle(
                   fontSize: 24,
@@ -208,7 +207,7 @@ class _HomePageState extends State<HomePage> {
             BlocBuilder<ProvinceBloc, ProvinceState>(
               bloc: _provinceBloc,
               builder: (context, state) {
-                return DropdownSearch<Province>(
+                return DropdownSearch<ProvinceModel>(
                   items: state.provinces,
                   // items: const [],
                   popupProps: PopupProps.menu(
