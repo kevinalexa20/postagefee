@@ -26,4 +26,20 @@ class OngkirService {
       throw Exception(e.message);
     }
   }
+
+  Future<Map<String, dynamic>> checkCost(
+      String origin, String destination, int weight, String courier) async {
+    // ...
+    try {
+      final response = await dioClient.post('/cost', data: {
+        'origin': origin,
+        'destination': destination,
+        'weight': weight,
+        'courier': courier,
+      });
+      return response.data['rajaongkir']['results'][0]['costs'][0];
+    } on DioException catch (e) {
+      throw Exception(e.message);
+    }
+  }
 }

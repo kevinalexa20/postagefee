@@ -6,6 +6,7 @@ import '../../../home/data/model/province_model.dart';
 
 part 'province_state.dart';
 
+// fetchProvince() method will return a list of ProvinceModel
 class ProvinceCubit extends Cubit<ProvinceState> {
   OngkirService service;
   ProvinceCubit(this.service) : super(ProvinceInitial());

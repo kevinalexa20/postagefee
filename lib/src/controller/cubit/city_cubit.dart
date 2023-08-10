@@ -6,6 +6,7 @@ import '../../model/city_model.dart';
 
 part 'city_state.dart';
 
+// fetchCity() method will return a list of CityModel
 class CityCubit extends Cubit<CityState> {
   OngkirService service;
   CityCubit(this.service) : super(CityInitial());

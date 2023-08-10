@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:postagecheck/src/controller/cubit/check_cost_cubit.dart';
 import 'package:postagecheck/src/controller/cubit/city_cubit.dart';
+import 'package:postagecheck/src/controller/cubit/city_destination_cubit.dart';
+import 'package:postagecheck/src/controller/cubit/city_origin_cubit.dart';
 import 'package:postagecheck/src/services/ongkir_service.dart';
 
 import 'core/utils/routes.dart';
@@ -37,6 +40,13 @@ class MyApp extends StatelessWidget {
         BlocProvider<HomePageBloc>(
           create: (_) => HomePageBloc(),
         ),
+        BlocProvider(create: (context) => CityOriginCubit(OngkirService())),
+        BlocProvider(
+          create: (context) => CityDestinationCubit(OngkirService()),
+        ),
+        BlocProvider(
+          create: (context) => CheckCostCubit(OngkirService()),
+        )
       ],
       child: MaterialApp.router(
         title: 'Flutter Demo',
